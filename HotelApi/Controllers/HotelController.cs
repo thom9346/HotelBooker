@@ -21,11 +21,10 @@ namespace HotelApi.Controllers
         [HttpGet]
         public IEnumerable<Hotel> GetAll()
         {
-            var hotelList = new List<Hotel>(); 
+            var hotelList = new List<Hotel>(); //this should probably be a customer DTO in the future
             foreach (var hotel in _repository.GetAll())
             {
-                var hotelDto = _hotelConverter.Convert(hotel);
-                hotelList.Add(hotelDto);
+                hotelList.Add(hotel);
             }
             return hotelList;
         }
