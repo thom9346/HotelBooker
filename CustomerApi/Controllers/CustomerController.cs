@@ -27,6 +27,17 @@ namespace CustomerApi.Controllers
             return new ObjectResult(customer);
         }
 
+        [HttpGet]
+        public IEnumerable<Customer> GetAll()
+        {
+            var customerList = new List<Customer>(); //this should probably be a customer DTO in the future
+            foreach (var customer in repository.GetAll())
+            {
+                customerList.Add(customer);
+            }
+            return customerList;
+        }
+
         [HttpPost]
         public IActionResult AddCustomer([FromBody] Customer customer) {
             if (customer == null)
@@ -42,9 +53,13 @@ namespace CustomerApi.Controllers
         }
 
         [HttpDelete]
-        public IActionResult DeleteCustomerById([FromBody] Customer customer)
+        public IActionResult DeleteCustomerById([FromBody] int id)
         {
-            repository.Delete(customer.CustomerId);
+            if (repository.Get(id) == null)
+            {
+                return NotFound();
+            }
+            repository.Delete(id);
             return Ok();
         }
     }
