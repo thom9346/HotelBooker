@@ -37,7 +37,8 @@ namespace CustomerApi.Controllers
             var newCustomer = repository.Add(customer);
 
             //I do not know what this does but I yoinked 
-            return CreatedAtRoute("AddCustomerRoute", new { id = newCustomer }, newCustomer);
+            
+            return CreatedAtRoute("GetCustomer", new { id = newCustomer }, newCustomer);
         }
     }
 }
