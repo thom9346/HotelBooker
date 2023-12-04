@@ -39,5 +39,12 @@ namespace CustomerApi.Controllers
             //I do not know what this does but I yoinked 
             return CreatedAtRoute("AddCustomerRoute", new { id = newCustomer }, newCustomer);
         }
+
+        [HttpDelete]
+        public IActionResult DeleteCustomerById([FromBody] Customer customer)
+        {
+            repository.Delete(customer.CustomerId);
+            return Ok();
+        }
     }
 }
