@@ -1,3 +1,5 @@
+using CustomerApi.Data;
+using CustomerApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CustomerApi.Controllers
@@ -6,21 +8,36 @@ namespace CustomerApi.Controllers
     [Route("[controller]")]
     public class CustomerController : ControllerBase
     {
-
-        public CustomerController()
+        private readonly IRepository<Customer> repository;
+        public CustomerController(IRepository<Customer> repos)
         {
-           
+            repository = repos;
         }
 
+
+        //gets the specified Customer by ID in repos
         [HttpGet("{id}", Name = "GetCustomer")]
-        public String Get(int id)
+        public IActionResult GetById(int id)
         {
-            return "yes";
+            var customer = repository.Get(id);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(customer);
         }
 
-        [HttpPut]
-        public void AddCustomer() {
+        [HttpPost]
+        public IActionResult AddCustomer([FromBody] Customer customer) {
+            if (customer == null)
+            {
+                return BadRequest();
+            }
 
+            var newCustomer = repository.Add(customer);
+
+            //I do not know what this does but I yoinked 
+            return CreatedAtRoute("AddCustomerRoute", new { id = newCustomer }, newCustomer);
         }
     }
 }
