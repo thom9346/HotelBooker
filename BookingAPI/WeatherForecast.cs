@@ -1,4 +1,4 @@
-namespace BookingAPI
+namespace BookingApi
 {
     public class WeatherForecast
     {
