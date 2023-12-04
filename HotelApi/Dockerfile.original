@@ -7,7 +7,6 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["HotelApi/HotelApi.csproj", "HotelApi/"]
-COPY ["SharedModels/SharedModels.csproj", "SharedModels/"]
 RUN dotnet restore "HotelApi/HotelApi.csproj"
 COPY . .
 WORKDIR "/src/HotelApi"

@@ -1,6 +1,7 @@
 using HotelApi.Data;
 using HotelApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using SharedModels;
 
 namespace HotelApi.Controllers
 {
@@ -9,20 +10,22 @@ namespace HotelApi.Controllers
     public class HotelController : ControllerBase
     {
         private readonly IRepository<Hotel> _repository;
+        private readonly IConverter<Hotel, HotelDTO> _hotelConverter;
 
-        public HotelController(IRepository<Hotel> repository)
+        public HotelController(IRepository<Hotel> repository, IConverter<Hotel, HotelDTO> converter)
         {
             _repository = repository;
+            _hotelConverter = converter;
         }
 
         [HttpGet]
         public IEnumerable<Hotel> GetAll()
         {
-            var hotelList = new List<Hotel>(); //this should probably be a customer DTO in the future
+            var hotelList = new List<Hotel>(); 
             foreach (var hotel in _repository.GetAll())
-
             {
-                hotelList.Add(hotel);
+                var hotelDto = _hotelConverter.Convert(hotel);
+                hotelList.Add(hotelDto);
             }
             return hotelList;
         }
