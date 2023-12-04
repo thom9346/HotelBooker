@@ -15,6 +15,17 @@ namespace HotelApi.Controllers
             _repository = repository;
         }
 
+        [HttpGet]
+        public IEnumerable<Hotel> GetAll()
+        {
+            var hotelList = new List<Hotel>(); //this should probably be a customer DTO in the future
+            foreach (var hotel in _repository.GetAll())
+
+            {
+                hotelList.Add(hotel);
+            }
+            return hotelList;
+        }
 
         // GET hotel/5
         [HttpGet("{id}", Name = "GetHotel")]
