@@ -1,6 +1,7 @@
 using CustomerApi.Data;
 using CustomerApi.Models;
 using Microsoft.EntityFrameworkCore;
+using SharedModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,9 @@ builder.Services.AddScoped<IRepository<Customer>, CustomerRepository>();
 
 // Register database initializer for dependency injection
 builder.Services.AddTransient<IDbInitializer, DbInitializer>();
+
+// Dependency injection for converter
+builder.Services.AddSingleton<IConverter<Customer, CustomerDTO>, CustomerConverter>();
 
 var app = builder.Build();
 

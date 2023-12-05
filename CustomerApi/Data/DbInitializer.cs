@@ -18,9 +18,7 @@ namespace CustomerApi.Data
 
             List <Customer> customers = new List<Customer>
             {
-                //new Customer { Name = "Hans", BillingAddress = "sted", ShippingAddress ="sted 2",
-                //                    Email ="hans@gmail.com", Phone ="12313123", CreditStanding=100 
-                //                   },
+                new Customer {Name = "Peter", CustomerId = 1, Age = 25, Email = "peter@mail.com", PhoneNr = "32819663",Balance = 20}
 
             };
 
