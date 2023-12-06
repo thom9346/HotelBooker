@@ -1,6 +1,7 @@
 using HotelApi.Data;
 using HotelApi.Models;
 using Microsoft.EntityFrameworkCore;
+using SharedModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,8 @@ builder.Services.AddScoped<IRepository<Hotel>, HotelRepository>();
 // Register database initializer for dependency injection
 builder.Services.AddTransient<IDbInitializer, DbInitializer>();
 
+// Dependency injection for converter
+builder.Services.AddSingleton<IConverter<Hotel, HotelDTO>, HotelConverter>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

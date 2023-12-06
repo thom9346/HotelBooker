@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1> Available Hotels</h1>
+
+<div>
+    @Html.ListBox("AvailableHotelsListBox", new SelectList (ViewBag.AvailableHotels), new {style = "width: 100%;"})
+</div>
+
