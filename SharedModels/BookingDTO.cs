@@ -1,7 +1,13 @@
-﻿namespace BookingApi.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SharedModels
 {
-    public class Booking
-    { 
+    public class BookingDTO
+    {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int BookingId { get; set; }

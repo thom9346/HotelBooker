@@ -10,10 +10,10 @@ namespace HotelRoomApi.Models
             return new HotelRoom
             {
                 Id = sharedHotelRoom.Id,
-                Name = sharedHotelRoom.Name,
-                Location= sharedHotelRoom.Location,
-                Rating = sharedHotelRoom.Rating,
-                IsAvailable= sharedHotelRoom.IsAvailable,
+                Number = sharedHotelRoom.Number,
+                Type = sharedHotelRoom.Type,
+                BaseCost = sharedHotelRoom.BaseCost,
+               
                 
         
             };
@@ -24,10 +24,9 @@ namespace HotelRoomApi.Models
             return new HotelRoomDTO
             {
                 Id = hiddenHotelRoom.Id,
-                Name = hiddenHotelRoom.Name,
-                Location = hiddenHotelRoom.Location,
-                Rating= hiddenHotelRoom.Rating,
-                IsAvailable= hiddenHotelRoom.IsAvailable,
+                Number = hiddenHotelRoom.Number,
+                Type = hiddenHotelRoom.Type,
+                BaseCost = hiddenHotelRoom.BaseCost,
       
             };
         }
