@@ -1,4 +1,5 @@
 using CustomerApi.Data;
+using CustomerApi.Infrastructure;
 using CustomerApi.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedModels;
@@ -6,6 +7,9 @@ using SharedModels;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// RabbitMQ connection string (see docker-compose.yml).
+string ConnectionString = "host=rabbitmq";
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -38,6 +42,10 @@ using (var scope = app.Services.CreateScope())
     var dbInitializer = services.GetService<IDbInitializer>();
     dbInitializer.Initialize(dbContext);
 }
+
+// Create a message listener in a separate thread.
+Task.Factory.StartNew(() =>
+    new MessageListener(app.Services, ConnectionString).Start());
 
 app.UseAuthorization();
 
