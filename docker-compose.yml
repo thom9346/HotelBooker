@@ -1,6 +1,11 @@
 version: '3.4'
 
 services:
+  bookingapi:
+    image: ${DOCKER_REGISTRY-}bookingapi
+    build:
+      context: .
+      dockerfile: BookingApi/Dockerfile
 
   customerapi:
     image: ${DOCKER_REGISTRY-}customerapi
@@ -8,11 +13,11 @@ services:
       context: .
       dockerfile: CustomerApi/Dockerfile
 
-  hotelapi:
-    image: ${DOCKER_REGISTRY-}hotelapi
+  hotelroomapi:
+    image: ${DOCKER_REGISTRY-}hotelroomapi
     build:
       context: .
-      dockerfile: HotelApi/Dockerfile
+      dockerfile: HotelRoomApi/Dockerfile
 
   paymentapi:
     image: ${DOCKER_REGISTRY-}paymentapi
