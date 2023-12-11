@@ -1,9 +1,13 @@
 using BookingApi.Data;
+using BookingApi.Infrastructure;
 using BookingApi.Models;
 using Microsoft.EntityFrameworkCore;
 using SharedModels;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// RabbitMQ connection string (see docker-compose.yml).
+string ConnectionString = "host=rabbitmq";
 
 // Add services to the container.
 
@@ -19,10 +23,19 @@ builder.Services.AddScoped<IRepository<Booking>, BookingRepository>();
 // Register database initializer for dependency injection
 builder.Services.AddTransient<IDbInitializer, DbInitializer>();
 
+// Register MessagePublisher (a messaging gateway) for dependency injection
+builder.Services.AddSingleton<IMessagePublisher>(new
+    MessagePublisher(ConnectionString));
+
+
 // Dependency injection for converter
 builder.Services.AddSingleton<IConverter<Booking, BookingDTO>, BookingConverter>();
 
 var app = builder.Build();
+
+// Create a message listener in a separate thread.
+Task.Factory.StartNew(() =>
+    new MessageListener(app.Services, ConnectionString).Start());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -44,5 +57,7 @@ using (var scope = app.Services.CreateScope())
     var dbInitializer = services.GetService<IDbInitializer>();
     dbInitializer.Initialize(dbContext);
 }
+
+
 
 app.Run();

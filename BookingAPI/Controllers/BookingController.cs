@@ -1,6 +1,7 @@
 using BookingApi.Data;
 using BookingApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using BookingApi.Infrastructure;
 using SharedModels;
 
 namespace BookingApi.Controllers
@@ -12,10 +13,13 @@ namespace BookingApi.Controllers
         private readonly IRepository<Booking> _repository;
         private readonly IConverter<Booking, BookingDTO> _bookingConverter;
 
-        public BookingController(IRepository<Booking> repository, IConverter<Booking, BookingDTO> converter)
+        private readonly IMessagePublisher messagePublisher;
+
+        public BookingController(IRepository<Booking> repository, IConverter<Booking, BookingDTO> converter, IMessagePublisher publisher)
         {
             _repository = repository;
             _bookingConverter = converter;
+            messagePublisher = publisher;
         }
 
         [HttpGet]
@@ -55,6 +59,8 @@ namespace BookingApi.Controllers
 
             var booking = _bookingConverter.Convert(bookingDto);
             var newBooking = _repository.Add(booking);
+
+            messagePublisher.PublishBookingCreatedMessage(bookingDto.CustomerId, bookingDto.HotelRoomId);
 
             return CreatedAtRoute("GetBooking", new { id = newBooking.BookingId },
                 _bookingConverter.Convert(newBooking));

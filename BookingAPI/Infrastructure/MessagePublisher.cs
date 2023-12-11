@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using EasyNetQ;
 using SharedModels;
+using Newtonsoft.Json;
 
-namespace Order.Infrastructure
+namespace BookingApi.Infrastructure
 {
     public class MessagePublisher : IMessagePublisher, IDisposable
     {

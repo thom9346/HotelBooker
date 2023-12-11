@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using SharedModels;
 
-namespace Order.Infrastructure
+namespace BookingApi.Infrastructure
 {
     public interface IMessagePublisher
     {

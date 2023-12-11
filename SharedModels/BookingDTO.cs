@@ -12,5 +12,7 @@ namespace SharedModels
         public DateTime EndDate { get; set; }
         public int BookingId { get; set; }
         public int CustomerId { get; set; }
+
+        public int HotelRoomId { get; set; }
     }
 }
