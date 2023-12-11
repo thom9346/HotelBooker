@@ -69,6 +69,32 @@ namespace CustomerApi.Controllers
             return CreatedAtRoute("GetCustomer", new { id = newCustomer }, newCustomer);
         }
 
+        [HttpPut("{id}", Name = "UpdateCustomer")]
+        public IActionResult UpdateCustomer([FromBody] string customer)
+        {
+            //takes Json from PaymentApi. Change when RabbitMQ is running. 
+            Console.WriteLine(customer);
+            if (customer == null)
+            {
+                Console.WriteLine("Bad request in update Customer");
+                return BadRequest();
+            }
+            /* Console.WriteLine(customer.Name + "name from udpate");
+             Customer getCustomer = repository.Get(customer.CustomerId);
+             getCustomer.Name = customer.Name;
+             getCustomer.PhoneNr = customer.PhoneNr;
+             getCustomer.Age = customer.Age;
+             getCustomer.Email = customer.Email;
+             getCustomer.Balance = customer.Balance;
+
+             repository.Delete(customer.CustomerId);
+             repository.Add(getCustomer);*/
+
+            //return new ObjectResult(getCustomer);
+            return new ObjectResult(customer);
+
+        }
+
         [HttpDelete]
         public IActionResult DeleteCustomerById([FromBody] int id)
         {

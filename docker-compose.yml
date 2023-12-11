@@ -1,17 +1,6 @@
 version: '3.4'
 
 services:
-  availabilityapi:
-    image: ${DOCKER_REGISTRY-}availabilityapi
-    build:
-      context: .
-      dockerfile: AvailabilityApi/Dockerfile
-    
-  bookingapi:
-    image: ${DOCKER_REGISTRY-}bookingapi
-    build:
-      context: .
-      dockerfile: BookingApi/Dockerfile
 
   customerapi:
     image: ${DOCKER_REGISTRY-}customerapi
@@ -30,8 +19,3 @@ services:
     build:
       context: .
       dockerfile: PaymentApi/Dockerfile
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-    - "15673:15672"
