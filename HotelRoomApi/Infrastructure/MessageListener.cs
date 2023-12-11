@@ -26,7 +26,7 @@ namespace HotelRoomApi.Infrastructure
  
                 using (bus = RabbitHutch.CreateBus(connectionString))
                 {
-                    bus.PubSub.Subscribe<BookingCreatedMessage>("BookingCreated");
+                    bus.PubSub.Subscribe<BookingCreatedMessage>("BookingCreated", HandleBookingCreated);
                     lock (this)
                     {
                         Monitor.Wait(this);
@@ -35,7 +35,42 @@ namespace HotelRoomApi.Infrastructure
  
         }
 
-        
+        private void HandleBookingCreated(BookingCreatedMessage message)
+        {
+            // A service scope is created to get an instance of the product repository.
+            // When the service scope is disposed, the product repository instance will
+            // also be disposed.
+            using (var scope = provider.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var HotelRoomRepos = services.GetService<IRepository<HotelRoom>>();
+
+
+                if (IsHotelRoomValid(message.HotelRoomId))
+                {
+
+                    var replyMessage = new BookingAcceptedMessage
+                    {
+                        HotelRoomValidated = true
+                    };
+
+                    bus.PubSub.Publish(replyMessage);
+
+
+                }
+                else
+                {
+                    // Publish  
+                    var replyMessage = new BookingRejectedMessage
+                    {
+                        Reason = "Hotel Room was Rejected"
+                    };
+
+                    bus.PubSub.Publish(replyMessage);
+                }
+            }
+        }
+
 
         private bool IsHotelRoomValid(int id)
         {
