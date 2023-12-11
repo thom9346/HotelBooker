@@ -19,9 +19,8 @@ namespace HotelApi.Data
 
             List <Hotel> customers = new List<Hotel>
             {
-                //new Customer { Name = "Hans", BillingAddress = "sted", ShippingAddress ="sted 2",
-                //                    Email ="hans@gmail.com", Phone ="12313123", CreditStanding=100 
-                //                   },
+                new Hotel { Id = 1, IsAvailable = true, Name = "The Golden Inn", Location = "Notting Hill 32", Rating = "4/5"
+                                   },
 
             };
 

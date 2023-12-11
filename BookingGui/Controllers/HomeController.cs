@@ -5,6 +5,7 @@ using HotelApi;
 
 namespace BookingGui.Controllers
 {
+    //does not run in docker for some reason, however if you run HotelApi in docker, you can connect it. 
     public class HomeController : Controller
     {
 

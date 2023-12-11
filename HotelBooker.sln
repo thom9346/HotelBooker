@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotelApi", "HotelApi\HotelA
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{14FA47F0-A966-496D-945D-2DD8FDC65414}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingGui", "BookingGui\BookingGui.csproj", "{A52E13DE-E791-4525-84D3-6D8EB1B7DEA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingGui", "BookingGui\BookingGui.csproj", "{A52E13DE-E791-4525-84D3-6D8EB1B7DEA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
