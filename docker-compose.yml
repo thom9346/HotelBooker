@@ -1,12 +1,6 @@
 version: '3.4'
 
 services:
-  availabilityapi:
-    image: ${DOCKER_REGISTRY-}availabilityapi
-    build:
-      context: .
-      dockerfile: AvailabilityApi/Dockerfile
-    
   bookingapi:
     image: ${DOCKER_REGISTRY-}bookingapi
     build:
@@ -19,11 +13,11 @@ services:
       context: .
       dockerfile: CustomerApi/Dockerfile
 
-  hotelapi:
-    image: ${DOCKER_REGISTRY-}hotelapi
+  hotelroomapi:
+    image: ${DOCKER_REGISTRY-}hotelroomapi
     build:
       context: .
-      dockerfile: HotelApi/Dockerfile
+      dockerfile: HotelRoomApi/Dockerfile
 
   paymentapi:
     image: ${DOCKER_REGISTRY-}paymentapi
