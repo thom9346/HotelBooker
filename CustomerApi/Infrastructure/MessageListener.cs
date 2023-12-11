@@ -83,9 +83,13 @@ namespace CustomerApi.Infrastructure
                 {
                     return false;
                 }
-                else
+                else if(customer.Age >= 18 && customer.Age <= 100)
                 {
                     return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
         }

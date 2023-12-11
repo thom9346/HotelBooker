@@ -9,5 +9,7 @@ namespace SharedModels
     public class BookingAcceptedMessage
     {
         public bool CustomerValidated;
+
+        public bool HotelRoomValidated;
     }
 }
