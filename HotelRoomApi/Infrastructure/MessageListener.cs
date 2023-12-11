@@ -22,17 +22,14 @@ namespace HotelRoomApi.Infrastructure
 
         public void Start()
         {
-           
- 
-                using (bus = RabbitHutch.CreateBus(connectionString))
+            using (bus = RabbitHutch.CreateBus(connectionString))
+            {
+                bus.PubSub.Subscribe<BookingCreatedMessage>("BookingCreated", HandleBookingCreated);
+                lock (this)
                 {
-                    bus.PubSub.Subscribe<BookingCreatedMessage>("BookingCreated", HandleBookingCreated);
-                    lock (this)
-                    {
-                        Monitor.Wait(this);
-                    }
+                    Monitor.Wait(this);
                 }
- 
+            }
         }
 
         private void HandleBookingCreated(BookingCreatedMessage message)
