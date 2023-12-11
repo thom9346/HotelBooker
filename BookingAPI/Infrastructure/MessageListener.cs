@@ -35,12 +35,12 @@ namespace BookingApi.Infrastructure
 
         private void HandleBookingAccepted(BookingAcceptedMessage message)
         {
-
+            Console.WriteLine("Booking received a bookingAcceptedMessage from: hotelroom?: " + message.HotelRoomValidated + "Customer?:" + message.CustomerValidated);
         }
 
         private void HandleBookingRejected(BookingRejectedMessage message)
         {
-
+            Console.WriteLine("Booking was rejected, because: " + message.Reason);
         }
 
     }
