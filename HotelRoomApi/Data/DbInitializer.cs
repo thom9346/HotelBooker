@@ -19,9 +19,7 @@ namespace HotelRoomApi.Data
 
             List<HotelRoom> customers = new List<HotelRoom>
             {
-                new HotelRoom { Id = 1, IsAvailable = true, Name = "The Golden Inn", Location = "Notting Hill 32", Rating = "4/5"
-                                   },
-
+                new HotelRoom { Id = 1, Number = 1, Type = 1, BaseCost = 100} 
             };
 
             context.HotelRooms.AddRange(customers);
