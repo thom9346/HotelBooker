@@ -24,8 +24,3 @@ services:
     build:
       context: .
       dockerfile: PaymentApi/Dockerfile
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-    - "15673:15672"
