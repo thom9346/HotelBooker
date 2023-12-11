@@ -19,14 +19,16 @@ namespace HotelApi.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Hotel> GetAll()
+        public IEnumerable<HotelDTO> GetAll()
         {
-            var hotelList = new List<Hotel>(); //this should probably be a customer DTO in the future
+            var hotelDtoList = new List<HotelDTO>();
+
             foreach (var hotel in _repository.GetAll())
             {
-                hotelList.Add(hotel);
+                var hotelDto = _hotelConverter.Convert(hotel);
+                hotelDtoList.Add(hotelDto);
             }
-            return hotelList;
+            return hotelDtoList;
         }
 
         // GET hotel/5
@@ -38,21 +40,24 @@ namespace HotelApi.Controllers
             {
                 return NotFound();
             }
-            return new ObjectResult(item);
+            var hotelDto = _hotelConverter.Convert(item);
+            return new ObjectResult(hotelDto);
         }
 
         // POST hotels
         [HttpPost]
-        public IActionResult Post([FromBody] Hotel hotel)
+        public IActionResult Post([FromBody] HotelDTO hotelDto)
         {
-            if (hotel == null)
+            if (hotelDto == null)
             {
                 return BadRequest();
             }
 
+            var hotel = _hotelConverter.Convert(hotelDto);
             var newCustomer = _repository.Add(hotel);
 
-            return CreatedAtRoute("GetHotel", new { id = newCustomer.Id }, newCustomer);
+            return CreatedAtRoute("GetHotel", new { id = newCustomer.Id },
+                _hotelConverter.Convert(newCustomer));
         }
 
         [HttpDelete]
