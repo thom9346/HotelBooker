@@ -22,21 +22,19 @@ namespace HotelRoomApi.Infrastructure
 
         public void Start()
         {
-           
- 
-                using (bus = RabbitHutch.CreateBus(connectionString))
+            using (bus = RabbitHutch.CreateBus(connectionString))
+            {
+                bus.PubSub.Subscribe<BookingCreatedMessage>("BookingCreated", HandleBookingCreated);
+                lock (this)
                 {
-                    bus.PubSub.Subscribe<BookingCreatedMessage>("BookingCreated", HandleBookingCreated);
-                    lock (this)
-                    {
-                        Monitor.Wait(this);
-                    }
+                    Monitor.Wait(this);
                 }
- 
+            }
         }
 
         private void HandleBookingCreated(BookingCreatedMessage message)
         {
+            Console.WriteLine("Hotel Room found a message" + message.ToString);
             // A service scope is created to get an instance of the product repository.
             // When the service scope is disposed, the product repository instance will
             // also be disposed.
@@ -82,6 +80,7 @@ namespace HotelRoomApi.Infrastructure
                 var hotelRoom = hotelRoomRepos.Get(id);
                 if (hotelRoom == null)
                 {
+                    Console.WriteLine("Hotel room not found");
                     return false;
                 }
                 else

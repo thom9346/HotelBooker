@@ -37,6 +37,7 @@ namespace CustomerApi.Infrastructure
 
         private void HandleBookingCreated(BookingCreatedMessage message)
         {
+            Console.WriteLine("Customer found a message" + message);
             // A service scope is created to get an instance of the product repository.
             // When the service scope is disposed, the product repository instance will
             // also be disposed.
@@ -81,15 +82,25 @@ namespace CustomerApi.Infrastructure
                 var customer = customerRepos.Get(id);
                 if (customer == null)
                 {
+                    Console.WriteLine("Customer not found");
                     return false;
+                    
                 }
                 else if(customer.Age >= 18 && customer.Age <= 100)
                 {
-                    return true;
+                    Console.WriteLine("Customer out of age range");
+                    return false;
+                    
+                }
+                else if (customer.Balance < 1)
+                {
+                    Console.WriteLine("Customer not enough balance");
+                    return false;
                 }
                 else
                 {
-                    return false;
+
+                    return true;
                 }
             }
         }
