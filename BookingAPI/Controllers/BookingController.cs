@@ -3,6 +3,7 @@ using BookingApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using BookingApi.Infrastructure;
 using SharedModels.Booking;
+using BookingApi.Services;
 
 namespace BookingApi.Controllers
 {
@@ -12,14 +13,16 @@ namespace BookingApi.Controllers
     {
         private readonly IRepository<Booking> _repository;
         private readonly IConverter<Booking, BookingDTO> _bookingConverter;
+        private readonly IBookingService _bookingService;
 
         private readonly IMessagePublisher _messagePublisher;
 
-        public BookingController(IRepository<Booking> repository, IConverter<Booking, BookingDTO> converter, IMessagePublisher publisher)
+        public BookingController(IRepository<Booking> repository, IConverter<Booking, BookingDTO> converter, IMessagePublisher publisher, IBookingService bookingService)
         {
             _repository = repository;
             _bookingConverter = converter;
             _messagePublisher = publisher;
+            _bookingService = bookingService;
         }
 
         [HttpGet]
@@ -57,15 +60,28 @@ namespace BookingApi.Controllers
                 return BadRequest();
             }
 
+
             var booking = _bookingConverter.Convert(bookingDto);
-            booking.Status = BookingDTO.BookingStatus.tentative;
 
-            var newBooking = _repository.Add(booking);
+            if (_bookingService.AreChosenDatesAvailable(bookingDto))
+            {
+                booking.Status = BookingDTO.BookingStatus.tentative;
 
-            _messagePublisher.PublishBookingCreatedMessage(_bookingConverter.Convert(newBooking));
+                var newBooking = _repository.Add(booking);
 
-            return CreatedAtRoute("GetBooking", new { id = newBooking.BookingId },
-                _bookingConverter.Convert(newBooking));
+                _messagePublisher.PublishBookingCreatedMessage(_bookingConverter.Convert(newBooking));
+
+                return CreatedAtRoute("GetBooking", new { id = newBooking.BookingId }, _bookingConverter.Convert(newBooking));
+            } 
+            else
+            {
+                // Send message? 
+                return StatusCode(400, "Dates are already occupied");
+            }
+
+
+
+           
         }
 
         [HttpDelete]

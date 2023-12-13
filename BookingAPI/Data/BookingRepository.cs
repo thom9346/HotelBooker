@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BookingApi.Models;
+using SharedModels.Booking;
 
 namespace BookingApi.Data
 {
@@ -40,5 +41,7 @@ namespace BookingApi.Data
             db.Bookings.Remove(booking);
             db.SaveChanges();
         }
+
+
     }
 }

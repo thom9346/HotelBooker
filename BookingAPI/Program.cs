@@ -1,6 +1,7 @@
 using BookingApi.Data;
 using BookingApi.Infrastructure;
 using BookingApi.Models;
+using BookingApi.Services;
 using Microsoft.EntityFrameworkCore;
 using SharedModels.Booking;
 
@@ -19,6 +20,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<BookingApiContext>(opt => opt.UseInMemoryDatabase("BookingDb"));
 
 builder.Services.AddScoped<IRepository<Booking>, BookingRepository>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+
 
 // Register database initializer for dependency injection
 builder.Services.AddTransient<IDbInitializer, DbInitializer>();
