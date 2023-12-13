@@ -3,7 +3,6 @@ using CustomerApi.Models;
 using EasyNetQ;
 using SharedModels;
 using SharedModels.Booking.Messages;
-using SharedModels.Customer.Messages;
 using SharedModels.HotelRoom.Messages;
 
 namespace CustomerApi.Infrastructure
@@ -32,7 +31,6 @@ namespace CustomerApi.Infrastructure
             using (bus = RabbitHutch.CreateBus(connectionString))
                 {
                     bus.PubSub.Subscribe<HotelRoomValidMessage>("HotelRoomValid", HandleHotelRoomValid);
-                    bus.PubSub.Subscribe<HotelRoomAvailableMessage>("HotelRoomAvailable", HandleHotelRoomAvailable);
                 lock (this)
                     {
                         Monitor.Wait(this);
@@ -53,15 +51,13 @@ namespace CustomerApi.Infrastructure
                 var CustomerRepos = services.GetService<IRepository<Customer>>();
 
 
-                if (IsCustomerValid(message.CustomerId, message.BaseCost))
+                if (IsCustomerValid(message))
                 {
 
-                    var replyMessage = new CustomerValidMessage
+                    var replyMessage = new BookingAcceptedMessage
                     {
                         CustomerId = message.CustomerId,
-                        BookingId = message.BookingId,
-                        BaseCost = message.BaseCost,
-                        HotelRoomId = message.HotelRoomId,
+                        BookingId = message.BookingId
                     };
 
                     bus.PubSub.Publish(replyMessage);
@@ -80,28 +76,6 @@ namespace CustomerApi.Infrastructure
                     bus.PubSub.Publish(replyMessage);
                 }
             }
-        }
-        private void HandleHotelRoomAvailable(HotelRoomAvailableMessage message)
-        {
-            if(TryUpdateCustomerBalance(message.CustomerId, message.BaseCost))
-            {
-                var replyMessage = new BookingAcceptedMessage
-                {
-                    CustomerId = message.CustomerId,
-                    BookingId = message.BookingId
-                };
-                bus.PubSub.Publish(replyMessage);
-            }
-            else
-            {
-                var replyMessage = new BookingRejectedMessage
-                {
-                    BookingId = message.BookingId,
-                    Reason = "Could not update customers balance"
-                };
-                bus.PubSub.Publish(replyMessage);
-            }
-
         }
         private bool TryUpdateCustomerBalance(int id, int cost)
         {
@@ -126,14 +100,14 @@ namespace CustomerApi.Infrastructure
             }
         }
 
-        private bool IsCustomerValid(int id, int baseCost)
+        private bool IsCustomerValid(HotelRoomValidMessage message)
         {
             using (var scope = provider.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 var customerRepos = services.GetService<IRepository<Customer>>();
 
-                var customer = customerRepos.Get(id);
+                var customer = customerRepos.Get(message.CustomerId);
                 if (customer == null)
                 {
                     Console.WriteLine("Customer not found");
@@ -146,15 +120,21 @@ namespace CustomerApi.Infrastructure
                     return false;
                     
                 }
-                else if (customer.Balance < baseCost)
+                else if (customer.Balance < message.BaseCost)
                 {
                     Console.WriteLine("Customer not enough balance");
                     return false;
                 }
                 else
                 {
-
-                    return true;
+                    if (TryUpdateCustomerBalance(message.CustomerId, message.BaseCost))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
         }

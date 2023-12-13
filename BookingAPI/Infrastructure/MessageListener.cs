@@ -3,7 +3,6 @@ using BookingApi.Models;
 using EasyNetQ;
 using SharedModels.Booking;
 using SharedModels.Booking.Messages;
-using SharedModels.Customer.Messages;
 
 namespace BookingApi.Infrastructure
 {
@@ -29,7 +28,6 @@ namespace BookingApi.Infrastructure
             {
             bus.PubSub.Subscribe<BookingAcceptedMessage>("BookingAccepted", HandleBookingAccepted);
             bus.PubSub.Subscribe<BookingRejectedMessage>("BookingRejected", HandleBookingRejected);
-            bus.PubSub.Subscribe<CustomerValidMessage>("CustomerValid", HandleCustomerValid);
             lock (this)
             {
                 Monitor.Wait(this);
@@ -63,22 +61,6 @@ namespace BookingApi.Infrastructure
                 //delete tentaitve booking.
                 bookingRepo.Delete(message.BookingId);
             }
-        }
-        private void HandleCustomerValid(CustomerValidMessage message)
-        {
-            //TODO: check that the hotel is available
-          
-
-            //if available
-            var replyMessage = new HotelRoomAvailableMessage
-            {
-                CustomerId = message.CustomerId,
-                BookingId = message.BookingId,
-                BaseCost = message.BaseCost,
-            };
-            bus.PubSub.Publish(replyMessage);
-
-            //if not available publish a message. Probably BookingRejectedMessage(?)
         }
 
     }
