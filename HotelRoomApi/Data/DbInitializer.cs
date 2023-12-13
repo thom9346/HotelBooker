@@ -1,5 +1,6 @@
 ﻿
 using HotelRoomApi.Models;
+using SharedModels.HotelRoom;
 
 namespace HotelRoomApi.Data
 {
@@ -19,7 +20,7 @@ namespace HotelRoomApi.Data
 
             List<HotelRoom> customers = new List<HotelRoom>
             {
-                new HotelRoom { Id = 1, Number = 1, Type = 1, BaseCost = 100} 
+                new HotelRoom { Id = 1, Number = 1, Type = HotelRoomType.Standard, BaseCost = 600} 
             };
 
             context.HotelRooms.AddRange(customers);

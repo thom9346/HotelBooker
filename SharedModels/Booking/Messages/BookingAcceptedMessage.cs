@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedModels
+namespace SharedModels.Booking.Messages
 {
     public class BookingAcceptedMessage
     {
-        public bool CustomerValidated;
-
-        public bool HotelRoomValidated;
+        public int CustomerId { get; set; }
+        public int BookingId { get; set; }
     }
 }

@@ -1,8 +1,9 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using EasyNetQ;
-using SharedModels;
 using Newtonsoft.Json;
+using SharedModels.Booking.Messages;
+using SharedModels.HotelRoom;
 
 namespace BookingApi.Infrastructure
 {
@@ -20,12 +21,13 @@ namespace BookingApi.Infrastructure
             bus.Dispose();
         }
 
-        public void PublishBookingCreatedMessage(int customerId, int hotelRoomId)
+        public void PublishBookingCreatedMessage(int customerId, int bookingId, int hotelRoomId)
         {
             var message = new BookingCreatedMessage
             {
                 CustomerId = customerId,
-                HotelRoomId = hotelRoomId
+                BookingId = bookingId,
+                HotelRoomId = hotelRoomId,
             };
 
             bus.PubSub.Publish(message);

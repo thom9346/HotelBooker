@@ -1,4 +1,4 @@
-﻿using SharedModels;
+﻿using SharedModels.HotelRoom;
 
 namespace HotelRoomApi.Models
 {
@@ -13,9 +13,6 @@ namespace HotelRoomApi.Models
                 Number = sharedHotelRoom.Number,
                 Type = sharedHotelRoom.Type,
                 BaseCost = sharedHotelRoom.BaseCost,
-               
-                
-        
             };
         }
 

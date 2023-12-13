@@ -2,7 +2,7 @@ using BookingApi.Data;
 using BookingApi.Infrastructure;
 using BookingApi.Models;
 using Microsoft.EntityFrameworkCore;
-using SharedModels;
+using SharedModels.Booking;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,7 +57,5 @@ using (var scope = app.Services.CreateScope())
     var dbInitializer = services.GetService<IDbInitializer>();
     dbInitializer.Initialize(dbContext);
 }
-
-
 
 app.Run();

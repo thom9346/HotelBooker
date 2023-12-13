@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SharedModels;
 using System.Net.Http.Json;
 using System.Net.Http;
+using SharedModels.Customer;
 
 namespace PaymentApi.Controllers
 {

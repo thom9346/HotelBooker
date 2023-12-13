@@ -1,4 +1,4 @@
-﻿using SharedModels;
+﻿using SharedModels.Booking;
 
 namespace BookingApi.Models
 {
@@ -11,6 +11,7 @@ namespace BookingApi.Models
             {
                 BookingId = sharedBooking.BookingId,
                 CustomerId = sharedBooking.CustomerId,
+                Status = sharedBooking.Status,
                 StartDate = sharedBooking.StartDate,
                 EndDate = sharedBooking.EndDate,
             };
@@ -22,6 +23,7 @@ namespace BookingApi.Models
             {
                 BookingId = hiddenBooking.BookingId,
                 CustomerId = hiddenBooking.CustomerId,
+                Status = hiddenBooking.Status,
                 StartDate = hiddenBooking.StartDate,
                 EndDate = hiddenBooking.EndDate
             };

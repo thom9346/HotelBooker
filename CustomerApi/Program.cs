@@ -2,7 +2,7 @@ using CustomerApi.Data;
 using CustomerApi.Infrastructure;
 using CustomerApi.Models;
 using Microsoft.EntityFrameworkCore;
-using SharedModels;
+using SharedModels.Customer;
 
 var builder = WebApplication.CreateBuilder(args);
 

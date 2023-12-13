@@ -1,7 +1,7 @@
 using CustomerApi.Data;
 using CustomerApi.Models;
 using Microsoft.AspNetCore.Mvc;
-using SharedModels;
+using SharedModels.Customer;
 
 namespace CustomerApi.Controllers
 {

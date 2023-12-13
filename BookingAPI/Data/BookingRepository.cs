@@ -36,8 +36,8 @@ namespace BookingApi.Data
 
         public void Delete(int id)
         {
-            var customer = db.Bookings.FirstOrDefault(p => p.BookingId == id);
-            db.Bookings.Remove(customer);
+            var booking = db.Bookings.FirstOrDefault(p => p.BookingId == id);
+            db.Bookings.Remove(booking);
             db.SaveChanges();
         }
     }
