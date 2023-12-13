@@ -1,6 +1,7 @@
 ﻿using CustomerApi.Data;
 using CustomerApi.Models;
 using EasyNetQ;
+using Microsoft.Extensions.Hosting;
 using SharedModels;
 using SharedModels.Booking.Messages;
 using SharedModels.HotelRoom.Messages;
@@ -53,7 +54,6 @@ namespace CustomerApi.Infrastructure
 
                 if (IsCustomerValid(message))
                 {
-
                     var replyMessage = new BookingAcceptedMessage
                     {
                         CustomerId = message.CustomerId,
@@ -61,8 +61,6 @@ namespace CustomerApi.Infrastructure
                     };
 
                     bus.PubSub.Publish(replyMessage);
-
-                   
                 }
                 else
                 {
@@ -77,29 +75,6 @@ namespace CustomerApi.Infrastructure
                 }
             }
         }
-        private bool TryUpdateCustomerBalance(int id, int cost)
-        {
-            using (var scope = provider.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var customerRepos = services.GetService<IRepository<Customer>>();
-
-                var customer = customerRepos.Get(id);
-                if(customer != null && customer.Balance >= cost)
-                {
-                    customer.Balance -= cost;
-                    customerRepos.Update(customer);
-                    return true;
-                }
-                else
-                {
-                    Console.WriteLine("Customer not found or balance insufficient");
-                    return false;
-                }
-               
-            }
-        }
-
         private bool IsCustomerValid(HotelRoomValidMessage message)
         {
             using (var scope = provider.CreateScope())
@@ -114,7 +89,7 @@ namespace CustomerApi.Infrastructure
                     return false;
                     
                 }
-                else if(customer.Age <= 18 && customer.Age >= 100)
+                else if(customer.Age <= 18 || customer.Age >= 100)
                 {
                     Console.WriteLine("Customer out of age range");
                     return false;
@@ -127,14 +102,9 @@ namespace CustomerApi.Infrastructure
                 }
                 else
                 {
-                    if (TryUpdateCustomerBalance(message.CustomerId, message.BaseCost))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    customer.Balance -= message.BaseCost;
+                    customerRepos.Update(customer);
+                    return true;
                 }
             }
         }
