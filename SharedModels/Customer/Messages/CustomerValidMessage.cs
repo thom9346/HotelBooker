@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedModels
+namespace SharedModels.Customer.Messages
 {
-    public class HotelRoomDTO
+    public class CustomerValidMessage
     {
-        public int Id { get; set; }
-        public int Number { get; set; }
-        public int Type { get; set; }
+        public int CustomerId { get; set; }
+        public int BookingId { get; set; }
         public int BaseCost { get; set; }
     }
 }

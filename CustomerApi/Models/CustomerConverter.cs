@@ -1,4 +1,4 @@
-﻿using SharedModels;
+﻿using SharedModels.Customer;
 
 namespace CustomerApi.Models
 {

@@ -1,7 +1,7 @@
 using HotelRoomApi.Data;
 using HotelRoomApi.Models;
 using Microsoft.AspNetCore.Mvc;
-using SharedModels;
+using SharedModels.HotelRoom;
 
 namespace HotelRoomApi.Controllers
 {

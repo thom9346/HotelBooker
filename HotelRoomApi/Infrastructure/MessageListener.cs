@@ -1,7 +1,9 @@
 ﻿using HotelRoomApi.Data;
 using HotelRoomApi.Models;
 using EasyNetQ;
-using SharedModels;
+using SharedModels.Booking.Messages;
+using SharedModels.HotelRoom.Messages;
+using SharedModels.HotelRoom;
 
 namespace HotelRoomApi.Infrastructure
 {
@@ -22,6 +24,10 @@ namespace HotelRoomApi.Infrastructure
 
         public void Start()
         {
+            //for some reason im still getting the "A task was cancelled" error.
+            //Introduced a thread.sleep for now, but we should prob just copy/paste the retry policy
+            //I didnt do it yet, because I am clueless why its needed right now
+            Thread.Sleep(10000);
             using (bus = RabbitHutch.CreateBus(connectionString))
             {
                 bus.PubSub.Subscribe<BookingCreatedMessage>("BookingCreated", HandleBookingCreated);
@@ -41,26 +47,27 @@ namespace HotelRoomApi.Infrastructure
             using (var scope = provider.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                var HotelRoomRepos = services.GetService<IRepository<HotelRoom>>();
-
+                var hotelRoomRepos = services.GetService<IRepository<HotelRoom>>();
+                var baseCost = hotelRoomRepos.Get(message.HotelRoomId).BaseCost;
 
                 if (IsHotelRoomValid(message.HotelRoomId))
                 {
 
-                    var replyMessage = new BookingAcceptedMessage
+                    var replyMessage = new HotelRoomValidMessage
                     {
-                        HotelRoomValidated = true
+                        BookingId = message.BookingId,
+                        CustomerId = message.CustomerId,
+                        BaseCost = baseCost
                     };
 
                     bus.PubSub.Publish(replyMessage);
-
-
                 }
                 else
                 {
                     // Publish  
                     var replyMessage = new BookingRejectedMessage
                     {
+                        BookingId = message.BookingId,
                         Reason = "Hotel Room was Rejected"
                     };
 
@@ -68,7 +75,6 @@ namespace HotelRoomApi.Infrastructure
                 }
             }
         }
-
 
         private bool IsHotelRoomValid(int id)
         {
