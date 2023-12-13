@@ -10,12 +10,13 @@ namespace BookingApi.Services
 
         public BookingService(IRepository<Booking> repository)
         {
-            repository = _repository;
+            _repository = repository;
         }
 
         public bool AreChosenDatesAvailable(BookingDTO booking)
         {
-            foreach (Booking book in _repository.GetAll())
+            var allBooks = _repository.GetAll();
+            foreach (var book in allBooks)
             {
                 if (booking.HotelRoomId == book.HotelRoomId)
                 {
