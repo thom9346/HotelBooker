@@ -62,8 +62,7 @@ namespace BookingApi.Controllers
 
             var newBooking = _repository.Add(booking);
 
-            _messagePublisher.PublishBookingCreatedMessage(
-                bookingDto.CustomerId, newBooking.BookingId, bookingDto.HotelRoomId);
+            _messagePublisher.PublishBookingCreatedMessage(_bookingConverter.Convert(newBooking));
 
             return CreatedAtRoute("GetBooking", new { id = newBooking.BookingId },
                 _bookingConverter.Convert(newBooking));

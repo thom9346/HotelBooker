@@ -11,6 +11,7 @@ namespace BookingApi.Models
             {
                 BookingId = sharedBooking.BookingId,
                 CustomerId = sharedBooking.CustomerId,
+                HotelRoomId = sharedBooking.HotelRoomId,
                 Status = sharedBooking.Status,
                 StartDate = sharedBooking.StartDate,
                 EndDate = sharedBooking.EndDate,
@@ -23,6 +24,7 @@ namespace BookingApi.Models
             {
                 BookingId = hiddenBooking.BookingId,
                 CustomerId = hiddenBooking.CustomerId,
+                HotelRoomId = hiddenBooking.HotelRoomId,
                 Status = hiddenBooking.Status,
                 StartDate = hiddenBooking.StartDate,
                 EndDate = hiddenBooking.EndDate

@@ -57,7 +57,8 @@ namespace HotelRoomApi.Infrastructure
                     {
                         BookingId = message.BookingId,
                         CustomerId = message.CustomerId,
-                        BaseCost = baseCost
+                        BaseCost = baseCost,
+                        HotelRoomId = message.HotelRoomId,
                     };
 
                     bus.PubSub.Publish(replyMessage);

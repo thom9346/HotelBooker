@@ -19,7 +19,7 @@ namespace BookingApi.Data
 
             List<Booking> customers = new List<Booking>
             {
-                new Booking { BookingId = 1, CustomerId = 1, EndDate = new DateTime(), StartDate = new DateTime()} 
+                new Booking { BookingId = 1, CustomerId = 1, HotelRoomId = 1, EndDate = new DateTime(2023,12,12), StartDate = new DateTime(2023,12,20)} 
             };
 
             context.Bookings.AddRange(customers);

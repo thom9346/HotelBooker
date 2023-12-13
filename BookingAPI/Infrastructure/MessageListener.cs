@@ -67,6 +67,7 @@ namespace BookingApi.Infrastructure
         private void HandleCustomerValid(CustomerValidMessage message)
         {
             //TODO: check that the hotel is available
+          
 
             //if available
             var replyMessage = new HotelRoomAvailableMessage
