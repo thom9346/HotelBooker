@@ -29,3 +29,11 @@ services:
     image: rabbitmq:3-management
     ports:
     - "15673:15672"
+  apigateway:
+    image: ${DOCKER_REGISTRY-}apigateway
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    ports:
+    - 8001:80
+

@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "apigateway": "StartDebugging",
+        "bookingapi": "StartDebugging",
+        "customerapi": "StartDebugging",
+        "hotelroomapi": "StartDebugging",
+        "paymentapi": "StartDebugging"
+      }
+    }
+  }
+}

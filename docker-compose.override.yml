@@ -28,3 +28,9 @@ services:
       - ASPNETCORE_URLS=http://+:80
     ports:
       - "8085:80"
+  apigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+

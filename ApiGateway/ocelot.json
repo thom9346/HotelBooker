@@ -1,0 +1,33 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/Customer",
+      "UpstreamHttpMethod": [ "Get", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "customerapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/Customer"
+    },
+    {
+      "UpstreamPathTemplate": "/Customer/{customerId}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "customerapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/Customer/{customerId}"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl":  "http://localhost:800"
+  }
+
+}
