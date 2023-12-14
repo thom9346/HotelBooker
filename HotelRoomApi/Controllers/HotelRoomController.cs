@@ -60,7 +60,7 @@ namespace HotelRoomApi.Controllers
                 _hotelRoomConverter.Convert(newCustomer));
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}", Name ="DeleteHotelRoom")]
         public IActionResult DeleteHotelRoomById([FromBody] int id)
         {
             if (_repository.Get(id) == null)

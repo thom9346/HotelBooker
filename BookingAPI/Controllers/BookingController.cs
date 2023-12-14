@@ -78,9 +78,6 @@ namespace BookingApi.Controllers
 
                 return CreatedAtRoute("GetBooking", new { id = newBooking.BookingId }, _bookingConverter.Convert(newBooking));
             }
-
-
-
            
         }
 

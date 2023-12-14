@@ -11,7 +11,7 @@ namespace CustomerApi.Controllers
     {
         private readonly IRepository<Customer> repository;
         private readonly IConverter<Customer, CustomerDTO> customerConverter;
-        public CustomerController(IRepository<Customer> repos, IConverter<Customer,CustomerDTO> converter)
+        public CustomerController(IRepository<Customer> repos, IConverter<Customer, CustomerDTO> converter)
         {
             repository = repos;
             customerConverter = converter;
@@ -19,16 +19,16 @@ namespace CustomerApi.Controllers
 
 
         //gets the specified Customer by ID in repos
-         [HttpGet("{id}", Name = "GetCustomer")]
-         public IActionResult GetById(int id)
-         {
-             var customer = repository.Get(id);
-             if (customer == null)
-             {
-                 return NotFound();
-             }
-             return new ObjectResult(customer);
-         }
+        [HttpGet("{id}", Name = "GetCustomer")]
+        public IActionResult GetById(int id)
+        {
+            var customer = repository.Get(id);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(customer);
+        }
 
 
         //for some reason this does not work. Nothing is being displayed when returned, it does however to my knowledge convert correctly. 
@@ -65,7 +65,7 @@ namespace CustomerApi.Controllers
             }
 
             var newCustomer = repository.Add(customer);
-            
+
             return CreatedAtRoute("GetCustomer", new { id = newCustomer }, newCustomer);
         }
 
@@ -95,7 +95,7 @@ namespace CustomerApi.Controllers
 
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}", Name="DeleteCustomer")]
         public IActionResult DeleteCustomerById([FromBody] int id)
         {
             if (repository.Get(id) == null)

@@ -2,7 +2,7 @@
   "Routes": [
     {
       "UpstreamPathTemplate": "/Customer",
-      "UpstreamHttpMethod": [ "Get", "Put" ],
+      "UpstreamHttpMethod": [ "Get", "Put", "Post" ],
 
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -15,7 +15,7 @@
     },
     {
       "UpstreamPathTemplate": "/Customer/{customerId}",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ],
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -24,6 +24,58 @@
         }
       ],
       "DownstreamPathTemplate": "/Customer/{customerId}"
+    },
+    {
+      "UpstreamPathTemplate": "/Booking",
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "bookingapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/Booking"
+
+    },
+    {
+      "UpstreamPathTemplate": "/Booking/{BookingId}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "bookingapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/Booking/{BookingId}"
+
+    },
+    {
+      "UpstreamPathTemplate": "/HotelRoom",
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hotelroomapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/HotelRoom"
+
+    },
+    {
+      "UpstreamPathTemplate": "/HotelRoom/{HotelRoomId}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hotelroomapi",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/HotelRoom/{HotelRoomId}"
+
     }
   ],
   "GlobalConfiguration": {
