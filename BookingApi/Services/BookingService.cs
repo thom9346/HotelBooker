@@ -13,14 +13,17 @@ namespace BookingApi.Services
             _repository = repository;
         }
 
-        public bool AreChosenDatesAvailable(BookingDTO booking)
+        public bool DoesBookingOverlap(BookingDTO newBooking)
         {
             var allBooks = _repository.GetAll();
-            foreach (var book in allBooks)
+            foreach (var existingBooking in allBooks)
             {
-                if (booking.HotelRoomId == book.HotelRoomId)
+                if (newBooking.HotelRoomId == existingBooking.HotelRoomId && existingBooking.Status != BookingDTO.BookingStatus.cancelled) // and existing booking is not with cancelled
                 {
-                    return true;
+                    if(newBooking.StartDate < existingBooking.EndDate && existingBooking.StartDate < newBooking.EndDate)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;

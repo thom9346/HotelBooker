@@ -63,8 +63,13 @@ namespace BookingApi.Controllers
 
             var booking = _bookingConverter.Convert(bookingDto);
 
-            if (_bookingService.AreChosenDatesAvailable(bookingDto))
+            if (_bookingService.DoesBookingOverlap(bookingDto))
             {
+                // Send message? 
+                return StatusCode(400, "Dates are already occupied");
+            } 
+            else
+            { 
                 booking.Status = BookingDTO.BookingStatus.tentative;
 
                 var newBooking = _repository.Add(booking);
@@ -72,11 +77,6 @@ namespace BookingApi.Controllers
                 _messagePublisher.PublishBookingCreatedMessage(_bookingConverter.Convert(newBooking));
 
                 return CreatedAtRoute("GetBooking", new { id = newBooking.BookingId }, _bookingConverter.Convert(newBooking));
-            } 
-            else
-            {
-                // Send message? 
-                return StatusCode(400, "Dates are already occupied");
             }
 
 
