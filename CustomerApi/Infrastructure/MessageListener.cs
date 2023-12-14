@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using SharedModels;
 using SharedModels.Booking.Messages;
 using SharedModels.HotelRoom.Messages;
+using SharedModels.Payment.Messages;
 
 namespace CustomerApi.Infrastructure
 {
@@ -32,6 +33,7 @@ namespace CustomerApi.Infrastructure
             using (bus = RabbitHutch.CreateBus(connectionString))
                 {
                     bus.PubSub.Subscribe<HotelRoomValidMessage>("HotelRoomValid", HandleHotelRoomValid);
+                    bus.PubSub.Subscribe<PaymentCreatedMessage>("PaymentCreated", HandlePaymentCreated);
                 lock (this)
                     {
                         Monitor.Wait(this);
@@ -105,6 +107,25 @@ namespace CustomerApi.Infrastructure
                     customer.Balance -= message.BaseCost;
                     customerRepos.Update(customer);
                     return true;
+                }
+            }
+        }
+
+        public void HandlePaymentCreated(PaymentCreatedMessage message)
+        {
+            using (var scope = provider.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var CustomerRepos = services.GetService<IRepository<Customer>>();
+                Customer customerToEdit = CustomerRepos.Get(message.CustomerId);
+                if (customerToEdit == null)
+                {
+                    Console.WriteLine("Payment Cancelled, customer not found");
+                }
+                else
+                {
+                    customerToEdit.Balance += message.amount;
+                    CustomerRepos.Update(customerToEdit);
                 }
             }
         }

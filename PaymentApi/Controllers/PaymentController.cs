@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http.Json;
 using System.Net.Http;
 using SharedModels.Customer;
+using PaymentApi.Infrastructure;
 
 namespace PaymentApi.Controllers
 {
@@ -11,49 +12,24 @@ namespace PaymentApi.Controllers
     [Route("[controller]")]
     public class PaymentController : ControllerBase
     {
+        private readonly IMessagePublisher _messagePublisher;
 
-
-        public PaymentController()
+        public PaymentController(IMessagePublisher publisher)
         {
+            _messagePublisher = publisher;
 
         }
 
         [HttpPut]
-        public async void EditBalanceById(int customerId, int amount)
+        public void EditBalanceById(int customerId, int amount)
         {
-            if (amount > 0)
+            if (customerId > 0 && amount != 0)
             {
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("http://customerapi/Customer/" + customerId);
-
-                var result = client.GetAsync(client.BaseAddress).Result.Content.ReadAsStringAsync().Result;
-                Console.WriteLine("result: " + result);
-                var json = (JObject)JsonConvert.DeserializeObject(result);
-            
-                CustomerDTO newCustomer = new CustomerDTO() { CustomerId = (int)json["customerId"], Name = (string)json["name"], PhoneNr = (string)json["phoneNr"], Email = (string) json["email"], Age = (int)json["age"], Balance = (int)json["balance"]};
-                newCustomer.Balance += amount;
-                Console.WriteLine("New customer balance:" + newCustomer.Balance);
-
-
-
-
-                HttpClient newClient = new HttpClient();
-                newClient.BaseAddress = new Uri("http://customerapi/Customer/" + customerId);
-                string jsonContent = JsonConvert.SerializeObject(newCustomer);
-                var respoonse = await newClient.PutAsJsonAsync("UpdateCustomer", jsonContent);
-
-
-                Console.WriteLine(respoonse);
-            
+                Console.WriteLine("Payment sent" + amount);
+                _messagePublisher.PublishPaymentCreatedMessage(customerId, amount);
             }
-            else if (amount < 0)
-            {
-                //CustomerApi.GetCustomerById.balance -= amount;
-            }
-            else
-            {
-                //badRequest
-            }
+
+
 
 
         }
