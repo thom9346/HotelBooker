@@ -4,6 +4,7 @@ using EasyNetQ;
 using Microsoft.Extensions.Hosting;
 using SharedModels;
 using SharedModels.Booking.Messages;
+using SharedModels.Customer.Messages;
 using SharedModels.HotelRoom.Messages;
 using SharedModels.Payment.Messages;
 
@@ -31,14 +32,15 @@ namespace CustomerApi.Infrastructure
             //I didnt do it yet, because I am clueless why its needed right now
             Thread.Sleep(10000);
             using (bus = RabbitHutch.CreateBus(connectionString))
-                {
-                    bus.PubSub.Subscribe<HotelRoomValidMessage>("HotelRoomValid", HandleHotelRoomValid);
-                    bus.PubSub.Subscribe<PaymentCreatedMessage>("PaymentCreated", HandlePaymentCreated);
+            {
+                bus.PubSub.Subscribe<HotelRoomValidMessage>("HotelRoomValid", HandleHotelRoomValid);
+                bus.PubSub.Subscribe<PaymentCreatedMessage>("PaymentCreated", HandlePaymentCreated);
+                bus.PubSub.Subscribe<RefundCustomerMessage>("PaymentCreated", HandleRefundCustomer);
                 lock (this)
-                    {
-                        Monitor.Wait(this);
-                    }
+                {
+                    Monitor.Wait(this);
                 }
+            }
 
         }
 
@@ -59,7 +61,8 @@ namespace CustomerApi.Infrastructure
                     var replyMessage = new BookingAcceptedMessage
                     {
                         CustomerId = message.CustomerId,
-                        BookingId = message.BookingId
+                        BookingId = message.BookingId,
+                        BaseCost = message.BaseCost
                     };
 
                     bus.PubSub.Publish(replyMessage);
@@ -89,13 +92,13 @@ namespace CustomerApi.Infrastructure
                 {
                     Console.WriteLine("Customer not found");
                     return false;
-                    
+
                 }
-                else if(customer.Age <= 18 || customer.Age >= 100)
+                else if (customer.Age <= 18 || customer.Age >= 100)
                 {
                     Console.WriteLine("Customer out of age range");
                     return false;
-                    
+
                 }
                 else if (customer.Balance < message.BaseCost)
                 {
@@ -126,6 +129,21 @@ namespace CustomerApi.Infrastructure
                 {
                     customerToEdit.Balance += message.amount;
                     CustomerRepos.Update(customerToEdit);
+                }
+            }
+        }
+        private void HandleRefundCustomer(RefundCustomerMessage message)
+        {
+            using (var scope = provider.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var customerRepos = services.GetService<IRepository<Customer>>();
+
+                var customer = customerRepos.Get(message.CustomerId);
+                if(customer != null) 
+                {
+                    customer.Balance += message.Amount;
+                    customerRepos.Update(customer);
                 }
             }
         }
