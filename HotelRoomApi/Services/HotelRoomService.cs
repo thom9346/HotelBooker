@@ -26,9 +26,7 @@ namespace HotelRoomApi.Services
             }
             else
             {
-                //TODO: Handle exception where the type is not in the mapping
-                //for now, just returning a default value.
-                return -1;
+                throw new InvalidOperationException($"Hotel room type '{type}' does not exist.");
             }
         }
     }

@@ -52,12 +52,20 @@ namespace HotelRoomApi.Controllers
             {
                 return BadRequest();
             }
+            try
+            {
+                var hotelRoom = _hotelRoomConverter.Convert(hotelRoomDto);
+                var newCustomer = _repository.Add(hotelRoom);
 
-            var hotelRoom = _hotelRoomConverter.Convert(hotelRoomDto);
-            var newCustomer = _repository.Add(hotelRoom);
+                return CreatedAtRoute("GetHotelRoom", new { id = newCustomer.Id },
+                    _hotelRoomConverter.Convert(newCustomer));
+            }
+            catch(InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-            return CreatedAtRoute("GetHotelRoom", new { id = newCustomer.Id },
-                _hotelRoomConverter.Convert(newCustomer));
+        
         }
 
         [HttpDelete("{id}", Name ="DeleteHotelRoom")]
