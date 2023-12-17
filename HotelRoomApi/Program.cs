@@ -1,6 +1,7 @@
 using HotelRoomApi.Data;
 using HotelRoomApi.Infrastructure;
 using HotelRoomApi.Models;
+using HotelRoomApi.Services;
 using Microsoft.EntityFrameworkCore;
 using SharedModels.HotelRoom;
 
@@ -18,6 +19,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<HotelRoomApiContext>(opt => opt.UseInMemoryDatabase("HotelRoomDb"));
 
 builder.Services.AddScoped<IRepository<HotelRoom>, HotelRoomRepository>();
+builder.Services.AddScoped<IHotelRoomService, HotelRoomService>();
 
 // Register database initializer for dependency injection
 builder.Services.AddTransient<IDbInitializer, DbInitializer>();
