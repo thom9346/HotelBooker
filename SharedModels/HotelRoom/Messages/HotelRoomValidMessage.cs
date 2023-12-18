@@ -10,7 +10,7 @@ namespace SharedModels.HotelRoom.Messages
     {
         public int BookingId { get; set; }
         public int CustomerId { get; set; }
-        public int BaseCost { get; set; }
+        public double BookingCost { get; set; }
         public int HotelRoomId { get; set; }
     }
 }

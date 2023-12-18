@@ -47,7 +47,10 @@ namespace HotelRoomApi.Infrastructure
 
                 var hotelRoom = hotelRoomRepos.Get(message.HotelRoomId);
 
-                if(hotelRoom == null)
+                TimeSpan duration = message.EndDate - message.StartDate;
+                var bookingCost = hotelRoom.BaseCost * duration.TotalDays;
+
+                if (hotelRoom == null)
                 {
                     var rejectionMessage = new BookingRejectedMessage
                     {
@@ -58,12 +61,11 @@ namespace HotelRoomApi.Infrastructure
                 }
                 else
                 {
-
                     var replyMessage = new HotelRoomValidMessage
                     {
                         BookingId = message.BookingId,
                         CustomerId = message.CustomerId,
-                        BaseCost = hotelRoom.BaseCost,
+                        BookingCost = bookingCost,
                         HotelRoomId = message.HotelRoomId,
                     };
 

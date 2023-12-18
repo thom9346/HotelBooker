@@ -35,7 +35,7 @@ namespace CustomerApi.Infrastructure
             {
                 bus.PubSub.Subscribe<HotelRoomValidMessage>("HotelRoomValid", HandleHotelRoomValid);
                 bus.PubSub.Subscribe<PaymentCreatedMessage>("PaymentCreated", HandlePaymentCreated);
-                bus.PubSub.Subscribe<RefundCustomerMessage>("PaymentCreated", HandleRefundCustomer);
+                bus.PubSub.Subscribe<RefundCustomerMessage>("RefundCustomer", HandleRefundCustomer);
                 lock (this)
                 {
                     Monitor.Wait(this);
@@ -62,7 +62,7 @@ namespace CustomerApi.Infrastructure
                     {
                         CustomerId = message.CustomerId,
                         BookingId = message.BookingId,
-                        BaseCost = message.BaseCost
+                        BookingCost = message.BookingCost
                     };
 
                     bus.PubSub.Publish(replyMessage);
@@ -100,14 +100,14 @@ namespace CustomerApi.Infrastructure
                     return false;
 
                 }
-                else if (customer.Balance < message.BaseCost)
+                else if (customer.Balance < message.BookingCost)
                 {
                     Console.WriteLine("Customer not enough balance");
                     return false;
                 }
                 else
                 {
-                    customer.Balance -= message.BaseCost;
+                    customer.Balance -= message.BookingCost;
                     customerRepos.Update(customer);
                     return true;
                 }

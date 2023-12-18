@@ -55,7 +55,7 @@ namespace BookingApi.Infrastructure
                     Console.WriteLine("Failed to update booking, issuing refund. Error: " + ex.Message);
                     var refundMessage = new RefundCustomerMessage 
                     { 
-                        CustomerId = message.CustomerId, Amount = message.BaseCost
+                        CustomerId = message.CustomerId, Amount = message.BookingCost
                     };
                     bus.PubSub.Publish(refundMessage);
                 } 

@@ -10,6 +10,6 @@ namespace SharedModels.Booking.Messages
     {
         public int CustomerId { get; set; }
         public int BookingId { get; set; }
-        public int BaseCost { get; set; }
+        public double BookingCost { get; set; }
     }
 }
