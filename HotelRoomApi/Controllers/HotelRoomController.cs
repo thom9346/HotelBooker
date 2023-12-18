@@ -55,10 +55,10 @@ namespace HotelRoomApi.Controllers
             try
             {
                 var hotelRoom = _hotelRoomConverter.Convert(hotelRoomDto);
-                var newCustomer = _repository.Add(hotelRoom);
+                var newHotelRoom = _repository.Add(hotelRoom);
 
-                return CreatedAtRoute("GetHotelRoom", new { id = newCustomer.Id },
-                    _hotelRoomConverter.Convert(newCustomer));
+                return CreatedAtRoute("GetHotelRoom", new { id = newHotelRoom.Id },
+                    _hotelRoomConverter.Convert(newHotelRoom));
             }
             catch(InvalidOperationException ex)
             {
