@@ -13,4 +13,6 @@
     <PackageReference Include="Ocelot" Version="22.0.1" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties ocelot-aggregation_1json__JsonSchema="https://json.schemastore.org/ocelot.json" /></VisualStudio></ProjectExtensions>
+
 </Project>

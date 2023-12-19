@@ -67,9 +67,9 @@ namespace BookingApi.Controllers
             {
                 // Send message? 
                 return StatusCode(400, "Dates are already occupied");
-            } 
+            }
             else
-            { 
+            {
                 booking.Status = BookingDTO.BookingStatus.tentative;
 
                 var newBooking = _repository.Add(booking);
@@ -78,7 +78,7 @@ namespace BookingApi.Controllers
 
                 return CreatedAtRoute("GetBooking", new { id = newBooking.BookingId }, _bookingConverter.Convert(newBooking));
             }
-           
+
         }
 
         [HttpDelete]
@@ -90,6 +90,22 @@ namespace BookingApi.Controllers
             }
             _repository.Delete(id);
             return Ok();
+        }
+
+        [HttpGet("customer/{id}", Name = "GetBookingsByCustomer")]
+        public IEnumerable<Booking> GetByCustomer(int customerId)
+        {
+            List<Booking> BookingsByCustomer = new List<Booking>();
+
+            foreach (var Booking in _repository.GetAll())
+            {
+                if (Booking.CustomerId == customerId)
+                {
+                    BookingsByCustomer.Add(Booking);
+                }
+            }
+            Console.WriteLine(BookingsByCustomer.Count + "found this many bookings!");
+            return BookingsByCustomer;
         }
     }
 }

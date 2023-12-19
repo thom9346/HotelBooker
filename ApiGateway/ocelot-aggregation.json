@@ -1,0 +1,76 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/Hotelroom",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hotelroomapi",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/HotelRoom/HotelRoom",
+      "UpstreamHttpMethod": [ "Get" ],
+      "Key": "allhotelrooms"
+    },
+    {
+      "DownstreamPathTemplate": "/Booking",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "bookingapi",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/bookingapi/booking",
+      "UpstreamHttpMethod": [ "Get" ],
+      "Key": "AllBookings"
+    },
+    {
+      "DownstreamPathTemplate": "/Booking",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "bookingapi",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/bookingapi/Customer/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "Key": "BookingsByCustomer"
+    },
+    {
+      "DownstreamPathTemplate": "/Customer/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "customerapi",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/customerApi/Customer/{id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "Key": "Customer"
+    }
+  ],
+  "Aggregates": [
+    {
+      "RouteKeys": [
+        "allhotelrooms",
+        "AllBookings"
+      ],
+      "UpstreamPathTemplate": "/aggregates/roomsandbookings"
+    },
+    {
+      "RouteKeys": [
+        "BookingsByCustomer",
+        "Customer"
+      ],
+      "UpstreamPathTemplate":  "/aggregates/bookingsbycustomer/{id}"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7000"
+  }
+
+}
