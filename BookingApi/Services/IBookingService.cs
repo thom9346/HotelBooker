@@ -4,7 +4,7 @@ namespace BookingApi.Services
 {
     public interface IBookingService
     {
-        
-        bool DoesBookingOverlap(BookingDTO booking);
+        bool DoesBookingOverlap(BookingDTO newBooking);
+        bool IsBookingValid(BookingDTO booking);
     }
 }

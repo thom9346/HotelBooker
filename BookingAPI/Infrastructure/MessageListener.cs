@@ -3,6 +3,7 @@ using BookingApi.Models;
 using EasyNetQ;
 using SharedModels.Booking;
 using SharedModels.Booking.Messages;
+using SharedModels.Customer.Messages;
 
 namespace BookingApi.Infrastructure
 {
@@ -42,10 +43,22 @@ namespace BookingApi.Infrastructure
                 var services = scope.ServiceProvider;
                 var bookingRepo = services.GetService<IRepository<Booking>>();
 
-                var booking = bookingRepo.Get(message.BookingId);
-              
-                booking.Status = BookingDTO.BookingStatus.completed;
-                bookingRepo.Update(booking);
+                try
+                {
+                    var booking = bookingRepo.Get(message.BookingId);
+
+                    booking.Status = BookingDTO.BookingStatus.completed;
+                    bookingRepo.Update(booking);
+                }
+                catch (Exception ex) 
+                {
+                    Console.WriteLine("Failed to update booking, issuing refund. Error: " + ex.Message);
+                    var refundMessage = new RefundCustomerMessage 
+                    { 
+                        CustomerId = message.CustomerId, Amount = message.BookingCost
+                    };
+                    bus.PubSub.Publish(refundMessage);
+                } 
                 
             }
         }

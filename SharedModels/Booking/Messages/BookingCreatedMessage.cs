@@ -13,6 +13,8 @@ namespace SharedModels.Booking.Messages
         public int CustomerId { get; set; }
         public int BookingId { get; set; }
         public int HotelRoomId { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
 
     }
 }

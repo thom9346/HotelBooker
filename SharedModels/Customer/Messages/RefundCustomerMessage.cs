@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedModels.Booking.Messages
+namespace SharedModels.Customer.Messages
 {
-    public class BookingAcceptedMessage
+    public class RefundCustomerMessage
     {
         public int CustomerId { get; set; }
-        public int BookingId { get; set; }
-        public double BookingCost { get; set; }
+        public double Amount { get; set; }
     }
 }

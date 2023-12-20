@@ -40,59 +40,36 @@ namespace HotelRoomApi.Infrastructure
 
         private void HandleBookingCreated(BookingCreatedMessage message)
         {
-            Console.WriteLine("Hotel Room found a message" + message.ToString);
-            // A service scope is created to get an instance of the product repository.
-            // When the service scope is disposed, the product repository instance will
-            // also be disposed.
             using (var scope = provider.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 var hotelRoomRepos = services.GetService<IRepository<HotelRoom>>();
-                var baseCost = hotelRoomRepos.Get(message.HotelRoomId).BaseCost;
 
-                if (IsHotelRoomValid(message.HotelRoomId))
+                var hotelRoom = hotelRoomRepos.Get(message.HotelRoomId);
+
+                TimeSpan duration = message.EndDate - message.StartDate;
+                var bookingCost = hotelRoom.BaseCost * duration.TotalDays;
+
+                if (hotelRoom == null)
                 {
-
+                    var rejectionMessage = new BookingRejectedMessage
+                    {
+                        BookingId = message.BookingId,
+                        Reason = $"Hotel Room with ID: {message.HotelRoomId} does not exist"
+                    };
+                    bus.PubSub.Publish(rejectionMessage);
+                }
+                else
+                {
                     var replyMessage = new HotelRoomValidMessage
                     {
                         BookingId = message.BookingId,
                         CustomerId = message.CustomerId,
-                        BaseCost = baseCost,
+                        BookingCost = bookingCost,
                         HotelRoomId = message.HotelRoomId,
                     };
 
                     bus.PubSub.Publish(replyMessage);
-                }
-                else
-                {
-                    // Publish  
-                    var replyMessage = new BookingRejectedMessage
-                    {
-                        BookingId = message.BookingId,
-                        Reason = "Hotel Room was Rejected"
-                    };
-
-                    bus.PubSub.Publish(replyMessage);
-                }
-            }
-        }
-
-        private bool IsHotelRoomValid(int id)
-        {
-            using (var scope = provider.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var hotelRoomRepos = services.GetService<IRepository<HotelRoom>>();
-
-                var hotelRoom = hotelRoomRepos.Get(id);
-                if (hotelRoom == null)
-                {
-                    Console.WriteLine("Hotel room not found");
-                    return false;
-                }
-                else
-                {
-                    return true;
                 }
             }
         }

@@ -60,13 +60,21 @@ namespace BookingApi.Controllers
                 return BadRequest();
             }
 
+            // Strip time component from start and end dates
+            bookingDto.StartDate = bookingDto.StartDate.Date;
+            bookingDto.EndDate = bookingDto.EndDate.Date;
+
 
             var booking = _bookingConverter.Convert(bookingDto);
 
-            if (_bookingService.DoesBookingOverlap(bookingDto))
+            if (!_bookingService.IsBookingValid(bookingDto))
             {
-                // Send message? 
-                return StatusCode(400, "Dates are already occupied");
+                return BadRequest("Invalid booking dates. Bookings must minimum 1 day long.");
+            } 
+
+            if(_bookingService.DoesBookingOverlap(bookingDto))
+            {
+                return BadRequest("Dates are already occupied");
             }
             else
             {

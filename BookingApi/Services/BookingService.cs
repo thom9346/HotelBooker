@@ -13,6 +13,21 @@ namespace BookingApi.Services
             _repository = repository;
         }
 
+        public bool IsBookingValid(BookingDTO newBooking)
+        {
+            if (newBooking.StartDate >= newBooking.EndDate)
+            {
+                return false;
+            }
+
+            TimeSpan duration = newBooking.EndDate - newBooking.StartDate;
+            if(duration.TotalDays < 1)
+            {
+                return false;
+            }
+            return true;
+            
+        }
         public bool DoesBookingOverlap(BookingDTO newBooking)
         {
             var allBooks = _repository.GetAll();
@@ -20,7 +35,7 @@ namespace BookingApi.Services
             {
                 if (newBooking.HotelRoomId == existingBooking.HotelRoomId && existingBooking.Status != BookingDTO.BookingStatus.cancelled) // and existing booking is not with cancelled
                 {
-                    if(newBooking.StartDate < existingBooking.EndDate && existingBooking.StartDate < newBooking.EndDate)
+                    if (newBooking.StartDate < existingBooking.EndDate && existingBooking.StartDate < newBooking.EndDate)
                     {
                         return true;
                     }

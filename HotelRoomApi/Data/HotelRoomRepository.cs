@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using HotelRoomApi.Models;
 using SharedModels.HotelRoom;
+using HotelRoomApi.Services;
 
 namespace HotelRoomApi.Data
 {
@@ -8,32 +9,16 @@ namespace HotelRoomApi.Data
     {
         private readonly HotelRoomApiContext db;
         private readonly Dictionary<HotelRoomType, int> baseCostMapping;
+        private readonly IHotelRoomService hotelRoomService;
 
-        public HotelRoomRepository(HotelRoomApiContext context)
+        public HotelRoomRepository(HotelRoomApiContext context, IHotelRoomService service)
         {
             db = context;
-            baseCostMapping = new Dictionary<HotelRoomType, int>()
-            {
-                { HotelRoomType.Standard, 600 },
-                { HotelRoomType.Double, 800 },
-                { HotelRoomType.Family, 1300 },
-                { HotelRoomType.Studio, 1600 },
-                { HotelRoomType.Deleuxe, 2500 },
-                { HotelRoomType.Suite, 3500 }
-            };
+            hotelRoomService = service;
         }
         public HotelRoom Add(HotelRoom entity)
         {
-            if(baseCostMapping.TryGetValue(entity.Type, out int cost))
-            {
-                entity.BaseCost = cost;
-            }
-            else
-            {
-                //TODO: Handle exception where the type is not in the mapping
-                //for now, just setting to -1.
-                entity.BaseCost = -1;
-            }
+            entity.BaseCost = hotelRoomService.GetBaseCost(entity.Type);
             var newHotel = db.HotelRooms.Add(entity).Entity;
             db.SaveChanges();
             return newHotel;
@@ -52,21 +37,9 @@ namespace HotelRoomApi.Data
         public void Update(HotelRoom entity)
         {
             var existingHotelRoom = db.HotelRooms.FirstOrDefault(p => p.Id == entity.Id);
-            if(existingHotelRoom != null)
+            if(existingHotelRoom != null && existingHotelRoom.Type != entity.Type)
             {
-                if(existingHotelRoom.Type != entity.Type)
-                {
-                    if(baseCostMapping.TryGetValue(entity.Type, out int newCost))
-                    {
-                        entity.BaseCost = newCost;
-                    }
-                    else
-                    {
-                        //TODO: Handle exception where the type is not in the mapping
-                        //for now, just setting to -1.
-                        entity.BaseCost = -1;
-                    }
-                }
+                entity.BaseCost = hotelRoomService.GetBaseCost(entity.Type);
             }
             db.Entry(existingHotelRoom).CurrentValues.SetValues(entity);
             db.SaveChanges();
@@ -74,8 +47,8 @@ namespace HotelRoomApi.Data
 
         public void Delete(int id)
         {
-            var customer = db.HotelRooms.FirstOrDefault(p => p.Id == id);
-            db.HotelRooms.Remove(customer);
+            var hotelRoom = db.HotelRooms.FirstOrDefault(p => p.Id == id);
+            db.HotelRooms.Remove(hotelRoom);
             db.SaveChanges();
         }
     }

@@ -24,13 +24,13 @@ namespace BookingApi.Infrastructure
 
         public void PublishBookingCreatedMessage(BookingDTO booking)
         {
-            
-
             var message = new BookingCreatedMessage
             {
                 CustomerId = booking.CustomerId,
                 BookingId = booking.BookingId,
                 HotelRoomId = booking.HotelRoomId,
+                StartDate = booking.StartDate,
+                EndDate = booking.EndDate
             };
 
             bus.PubSub.Publish(message);

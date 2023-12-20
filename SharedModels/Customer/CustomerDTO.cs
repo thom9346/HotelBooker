@@ -13,6 +13,6 @@
         public int Age;
 
         //notice that we don't transfer balance... maybe
-        public int Balance;
+        public double Balance;
     }
 }
